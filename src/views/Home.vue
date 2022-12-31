@@ -21,12 +21,15 @@ import { ref, onMounted ,  watch } from 'vue'
         updateDOM.value+=1;
     })
 
-    async function sort() {
+     async function sort() {
         if (selectedSort.value === "Insertion Sort") {
             await insertionSort();
         } else if (selectedSort.value === "Bubble Sort") {
             await bubbleSort();
+        } else if (selectedSort.value === "Merge Sort") {
+           await mergeSort(columns, 0, columns.length-1);
         }
+        // console.log(columns);
     }
 
 
@@ -65,6 +68,73 @@ import { ref, onMounted ,  watch } from 'vue'
             columns[j+1] = key;
         }
     }
+    function merge(arr: number[], l: number, m: number, r: number)
+{
+    var n1 = m - l + 1;
+    var n2 = r - m;
+ 
+    // Create temp arrays
+    var L = new Array(n1);
+    var R = new Array(n2);
+ 
+    // Copy data to temp arrays L[] and R[]
+    for (var i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (var j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+ 
+    // Merge the temp arrays back into arr[l..r]
+ 
+    // Initial index of first subarray
+    var i = 0;
+ 
+    // Initial index of second subarray
+    var j = 0;
+ 
+    // Initial index of merged subarray
+    var k = l;
+ 
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+ 
+    // Copy the remaining elements of
+    // L[], if there are any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+ 
+    // Copy the remaining elements of
+    // R[], if there are any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+ 
+// l is for left index and r is
+// right index of the sub-array
+// of arr to be sorted */
+function mergeSort(arr: number[],l: number, r: number){
+    if(l>=r){
+        return;//returns recursively
+    }
+    var m =l+ (r-l)/2;
+    mergeSort(arr,l,m);
+    mergeSort(arr,m+1,r);
+    merge(arr,l,m,r);
+}
 
     async function sleep() {
       return new Promise((resolve) => setTimeout(resolve, speedValue.value));
@@ -121,6 +191,7 @@ import { ref, onMounted ,  watch } from 'vue'
                 <div>
                     <o-dropdown-item aria-role="listitem" value="Insertion Sort">Insertion Sort</o-dropdown-item>
                     <o-dropdown-item aria-role="listitem" value="Insertion Sort">Bubble Sort</o-dropdown-item>
+                    <o-dropdown-item aria-role="listitem" value="Merge Sort">Merge Sort</o-dropdown-item>
                 </div>
             </o-dropdown>
         </div> 
