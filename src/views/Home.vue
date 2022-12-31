@@ -1,9 +1,10 @@
 <script setup lang="ts">
 
-import { ref, reactive,  watch } from 'vue'
+import { ref, onMounted ,  watch } from 'vue'
 
-    const arrayValue = ref(0);
-    const speedValue = ref(5);
+    const arrayValue = ref(10);
+    const speedValue = ref(1); 
+    const selectedSort = ref("No Sort Selected");
 
     const sliderType = 'warning'; 
     let columns: number[] = [];
@@ -20,6 +21,13 @@ import { ref, reactive,  watch } from 'vue'
         updateDOM.value+=1;
     })
 
+    async function sort() {
+        if (selectedSort.value === "Insertion Sort") {
+            await insertionSort();
+        } else if (selectedSort.value === "Bubble Sort") {
+            await bubbleSort();
+        }
+    }
 
 
      async function bubbleSort(){
@@ -58,9 +66,16 @@ import { ref, reactive,  watch } from 'vue'
         }
     }
 
-    function sleep() {
-      return new Promise((resolve) => setTimeout(resolve,  (1000/((speedValue.value*speedValue.value)))));
+    async function sleep() {
+      return new Promise((resolve) => setTimeout(resolve, speedValue.value));
     }
+
+    onMounted(() => {
+        columns = Array.from({length: arrayValue.value}, () => Math.floor(Math.random() * 100));
+        console.log(columns);
+        updateDOM.value+=1;
+    })
+
     
 </script>
 
@@ -68,28 +83,53 @@ import { ref, reactive,  watch } from 'vue'
     
     <div class="mainDiv has-text-centered">
 
-        <h1 class="title">Vue Sorting Visualizer</h1>     
+        <h1 class="title textWhiteBold">Vue Sorting Visualizer</h1>     
         <br>
-        <div class="container cols">
-            <o-field label="Size Of Array" >
-                <o-slider v-model="arrayValue" :tooltip-variant="sliderType" variant="danger" max="200"></o-slider>
+
+        <p class="textWhite"> Selected an algorithm with the dropdown and press the sort button to watch the list get sorted!</p>
+
+        <br>
+        
+        <div class="container slider">
+            <o-field  class="" label="Size Of Array" >
+                <o-slider v-model="arrayValue" :tooltip-variant="sliderType" variant="danger" :min="5" max="50"></o-slider>
             </o-field>
         </div>
-        <br>
-        <div class="container cols">
+        
+        <div class="container slider">
             <o-field label="Speed Of Sort" >
-                <o-slider v-model="speedValue" :tooltip-variant="sliderType" variant="danger" max="200"></o-slider>
+                <o-slider v-model="speedValue" :tooltip-variant="sliderType" variant="danger" :min="1" max="50"></o-slider>
             </o-field>
         </div>
-        <div class="container">
-            <o-button @click="bubbleSort()" variant="danger">Bubble Sort</o-button>
-            <o-button @click="insertionSort()" variant="danger">Insertion Sort</o-button>
-        </div>        
+
+        <br>
         <br>
 
+        <div class="container">
+            <o-button @click="sort()" variant="warning">Sort</o-button>
+        </div> 
 
-        <div class="container cols" :key="updateDOM">
-            <div class="bar" v-for="number,index in columns" :key="index" :style="{height: number + 'px', width: (100/arrayValue) + '%'}"></div>
+        <br>
+        
+        <div class="container">
+            <o-dropdown :triggers="['hover']" v-model="selectedSort" aria-role="list">
+                <template #trigger="{ active }">
+                    <o-button variant="warning">
+                    <span>{{ selectedSort }}</span>
+                    </o-button>
+                </template>
+                <div>
+                    <o-dropdown-item aria-role="listitem" value="Insertion Sort">Insertion Sort</o-dropdown-item>
+                    <o-dropdown-item aria-role="listitem" value="Insertion Sort">Bubble Sort</o-dropdown-item>
+                </div>
+            </o-dropdown>
+        </div> 
+        <!-- <p class="textWhiteBold">Algorithm Selected: {{ selectedSort }}</p>       -->
+        <br>
+        <br>
+
+        <div class="container cols box" :key="updateDOM">
+            <div class="bar" v-for="number,index in columns" :key="index" :style="{height: (number *3) + 'px', width: (70/arrayValue) + '%'}"></div>
         </div>
     </div>
 </template>
@@ -100,17 +140,36 @@ import { ref, reactive,  watch } from 'vue'
 .mainDiv {
     padding-left: 7.5%;
     padding-right: 7.5%;
+    background-color: #f95959;
+    padding-top:5%;
+    padding-bottom:50%;
+
 }
+
+.textWhiteBold{
+    color: white;
+    /* make font bold */
+    font-weight: bold;
+}
+.textWhite {
+    color: white;
+    font-size:large;
+}
+
 .cols {
-  width: 50%;
+  width: 75%;
+  background-color: #f95959;
+
 }
 .slider {
     width: 25%;
 }
 .bar {
   width: 20px;
-  background-color: black;
+  background-color: #455d7a;
   display: inline-block;
-  /* margin: 0 2px; */
+   margin: 0 2px;
+}
+body {
 }
 </style>
