@@ -115,7 +115,7 @@ async function selectionSort()
         <h1 class="title textWhiteBold">Vue Sorting Visualizer</h1>     
         <br>
 
-        <p class="textWhite"> Selected an algorithm with the dropdown and press the sort button to watch the list get sorted!</p>
+        <!-- <p class="textWhite"> Selected an algorithm with the dropdown and press the sort button to watch the list get sorted!</p> -->
 
         <br>
         
