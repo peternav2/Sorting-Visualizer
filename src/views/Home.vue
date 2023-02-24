@@ -154,7 +154,7 @@ async function selectionSort()
                 </div>
             </o-dropdown>
         </div> 
-        <!-- <p class="textWhiteBold">Algorithm Selected: {{ selectedSort }}</p>       -->
+        <!-- <p class="textWhiteBold">Algorithm Sd: {{ selectedSort }}</p>       -->
         <br>
         <br>
 
